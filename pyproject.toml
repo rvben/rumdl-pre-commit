@@ -1,0 +1,16 @@
+[project]
+name = "rumdl-pre-commit"
+version = "0.0.0"
+description = "Pre-commit hook for rumdl, a rust-based Markdown linter."
+authors = [
+    { name = "Ruben J. Jongejan", email = "ruben.jongejan@gmail.com" }
+]
+readme = "README.md"
+license = { file = "LICENSE" }
+dependencies = [
+    "rumdl==0.0.43"
+]
+
+[project.urls]
+Homepage = "https://github.com/rvben/rumdl"
+Repository = "https://github.com/rvben/rumdl-pre-commit" 
