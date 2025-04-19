@@ -1,0 +1,56 @@
+name: Mirror rumdl version
+
+on:
+  workflow_dispatch:
+  repository_dispatch:
+    types: [pypi_release]
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Run mirror.py
+        run: uv run mirror.py
+
+      - name: Check for unpushed commits
+        id: check_unpushed
+        run: |
+          UNPUSHED_COMMITS=$(git log origin/main..HEAD)
+          if [ -z "$UNPUSHED_COMMITS" ]; then
+            echo "No unpushed commits found."
+            echo "changes_exist=false" >> $GITHUB_ENV
+          else
+            echo "Unpushed commits found."
+            echo "changes_exist=true" >> $GITHUB_ENV
+          fi
+
+      - name: Push changes if they exist
+        if: env.changes_exist == 'true'
+        run: |
+          git push origin HEAD:refs/heads/main
+          git push origin HEAD:refs/heads/main --tags
+
+      - name: Create release on new tag if new changes exist
+        if: env.changes_exist == 'true'
+        run: |
+          TAG_NAME=$(git describe --tags $(git rev-list --tags --max-count=1))
+          echo $TAG_NAME
+          gh release create "$TAG_NAME" \
+            --title "$TAG_NAME" \
+            --notes "See: https://github.com/rvben/rumdl/releases/tag/${TAG_NAME/v}" \
+            --latest
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
