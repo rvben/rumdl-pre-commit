@@ -8,7 +8,7 @@ authors = [
 readme = "README.md"
 license = { file = "LICENSE" }
 dependencies = [
-    "rumdl==0.0.197"
+    "rumdl==0.0.199"
 ]
 
 [project.urls]
