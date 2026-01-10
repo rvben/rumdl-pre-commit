@@ -6,8 +6,8 @@
   types: [markdown]
 
 - id: rumdl-fmt
-  name: rumdl fmt
-  description: Format Markdown files using rumdl.
-  entry: rumdl fmt
+  name: rumdl format
+  description: Format Markdown files and fail if unfixable violations remain.
+  entry: rumdl check --fix
   language: python
   types: [markdown] 
