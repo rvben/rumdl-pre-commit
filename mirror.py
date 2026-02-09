@@ -8,8 +8,12 @@
 
 #!/usr/bin/env python3
 
+import json
+import os
 import re
 import subprocess
+import sys
+import time
 import urllib.request
 from packaging.version import parse as parse_version
 from pathlib import Path
@@ -19,7 +23,6 @@ def get_latest_rumdl_version():
     url = "https://pypi.org/pypi/rumdl/json"
     with urllib.request.urlopen(url) as response:
         data = response.read()
-    import json
 
     releases = json.loads(data)["releases"]
     versions = sorted(
@@ -27,6 +30,25 @@ def get_latest_rumdl_version():
         reverse=True,
     )
     return str(versions[0])
+
+
+def wait_for_pypi(version, max_wait=300, interval=15):
+    """Wait until the version is available on PyPI. Returns True if available."""
+    url = f"https://pypi.org/pypi/rumdl/{version}/json"
+    elapsed = 0
+    while elapsed < max_wait:
+        try:
+            with urllib.request.urlopen(url) as response:
+                if response.status == 200:
+                    print(f"Version {version} is available on PyPI.")
+                    return True
+        except urllib.error.HTTPError:
+            pass
+        print(f"Waiting for {version} on PyPI... ({elapsed}s/{max_wait}s)")
+        time.sleep(interval)
+        elapsed += interval
+    print(f"Timed out waiting for {version} on PyPI after {max_wait}s.")
+    return False
 
 
 def update_pyproject_toml(version):
@@ -55,22 +77,29 @@ def update_readme_md(version):
 
 
 def main():
-    latest_version = get_latest_rumdl_version()
-    print(f"Latest rumdl version: {latest_version}")
+    # Use version from dispatch payload if available, otherwise query PyPI
+    version = os.environ.get("DISPATCH_VERSION")
+    if version:
+        print(f"Using version from dispatch payload: {version}")
+        if not wait_for_pypi(version):
+            sys.exit(1)
+    else:
+        version = get_latest_rumdl_version()
+        print(f"Latest rumdl version from PyPI: {version}")
 
     changed = False
-    if update_pyproject_toml(latest_version):
+    if update_pyproject_toml(version):
         print("Updated pyproject.toml")
         changed = True
-    if update_readme_md(latest_version):
+    if update_readme_md(version):
         print("Updated README.md")
         changed = True
 
     if changed:
         subprocess.run(["git", "add", "pyproject.toml", "README.md"], check=True)
-        subprocess.run(["git", "commit", "-m", f"Mirror: {latest_version}"], check=True)
-        subprocess.run(["git", "tag", f"v{latest_version}"], check=True)
-        print(f"Committed and tagged v{latest_version}")
+        subprocess.run(["git", "commit", "-m", f"Mirror: {version}"], check=True)
+        subprocess.run(["git", "tag", f"v{version}"], check=True)
+        print(f"Committed and tagged v{version}")
     else:
         print("No changes needed.")
 

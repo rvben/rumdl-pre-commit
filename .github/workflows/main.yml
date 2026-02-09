@@ -28,6 +28,8 @@ jobs:
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
       - name: Run mirror.py
+        env:
+          DISPATCH_VERSION: ${{ github.event.client_payload.version }}
         run: uv run mirror.py
 
       - name: Check for unpushed commits
@@ -58,4 +60,4 @@ jobs:
             --notes "See: https://github.com/rvben/rumdl/releases/tag/$TAG_NAME" \
             --latest
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
