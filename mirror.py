@@ -54,9 +54,14 @@ def wait_for_pypi(version, max_wait=300, interval=15):
 def update_pyproject_toml(version):
     pyproject_path = Path("pyproject.toml")
     content = pyproject_path.read_text()
-    # Replace any rumdl entry in the dependencies list with the new pinned version
+    new_content = content
+    # Update the package version to match rumdl
     new_content = re.sub(
-        r'"rumdl([<>=!~]*[0-9\.\*]*)?"', f'"rumdl=={version}"', content
+        r'^version = ".*"', f'version = "{version}"', new_content, flags=re.MULTILINE
+    )
+    # Update the rumdl dependency pin
+    new_content = re.sub(
+        r'"rumdl([<>=!~]*[0-9\.\*]*)?"', f'"rumdl=={version}"', new_content
     )
     if new_content != content:
         pyproject_path.write_text(new_content)

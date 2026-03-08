@@ -1,16 +1,22 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "rumdl-pre-commit"
-version = "0.0.0"
+version = "0.1.43"
 description = "Pre-commit hook for rumdl, a rust-based Markdown linter."
 authors = [
     { name = "Ruben J. Jongejan", email = "ruben.jongejan@gmail.com" }
 ]
 readme = "README.md"
-license = { file = "LICENSE" }
+requires-python = ">=3.9"
+license = "MIT"
+license-files = ["LICENSE"]
 dependencies = [
     "rumdl==0.1.43"
 ]
 
 [project.urls]
 Homepage = "https://github.com/rvben/rumdl"
-Repository = "https://github.com/rvben/rumdl-pre-commit" 
+Repository = "https://github.com/rvben/rumdl-pre-commit"
