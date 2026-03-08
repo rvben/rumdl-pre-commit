@@ -55,9 +55,11 @@ def update_pyproject_toml(version):
     pyproject_path = Path("pyproject.toml")
     content = pyproject_path.read_text()
     new_content = content
-    # Update the package version to match rumdl
+    # Update the package version (appears right after [project] header)
     new_content = re.sub(
-        r'^version = ".*"', f'version = "{version}"', new_content, flags=re.MULTILINE
+        r'(\[project\]\nname = "[^"]*"\n)version = "[^"]*"',
+        rf'\1version = "{version}"',
+        new_content,
     )
     # Update the rumdl dependency pin
     new_content = re.sub(
