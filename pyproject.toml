@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "rumdl-pre-commit"
-version = "0.1.57"
+version = "0.1.58"
 description = "Pre-commit hook for rumdl, a rust-based Markdown linter."
 authors = [
     { name = "Ruben J. Jongejan", email = "ruben.jongejan@gmail.com" }
@@ -14,7 +14,7 @@ requires-python = ">=3.9"
 license = "MIT"
 license-files = ["LICENSE"]
 dependencies = [
-    "rumdl==0.1.57"
+    "rumdl==0.1.58"
 ]
 
 [project.urls]
