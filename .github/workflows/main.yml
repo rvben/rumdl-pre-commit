@@ -46,18 +46,25 @@ jobs:
 
       - name: Push changes if they exist
         if: env.changes_exist == 'true'
-        run: |
-          git push origin HEAD:refs/heads/main
-          git push origin HEAD:refs/heads/main --tags
+        run: git push origin HEAD:refs/heads/main --tags
 
       - name: Create release on new tag if new changes exist
         if: env.changes_exist == 'true'
         run: |
           TAG_NAME=$(git describe --tags $(git rev-list --tags --max-count=1))
-          echo $TAG_NAME
-          gh release create "$TAG_NAME" \
-            --title "$TAG_NAME" \
-            --notes "See: https://github.com/rvben/rumdl/releases/tag/$TAG_NAME" \
-            --latest
+          echo "Creating release for $TAG_NAME"
+          for i in 1 2 3 4 5; do
+            if gh release create "$TAG_NAME" \
+              --title "$TAG_NAME" \
+              --notes "See: https://github.com/rvben/rumdl/releases/tag/$TAG_NAME" \
+              --latest; then
+              echo "Release created successfully"
+              exit 0
+            fi
+            echo "Attempt $i failed, waiting 10s for tag to propagate..."
+            sleep 10
+          done
+          echo "Failed to create release after 5 attempts"
+          exit 1
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
