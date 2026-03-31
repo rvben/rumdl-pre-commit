@@ -1,15 +1,15 @@
 - id: rumdl
-  name: rumdl check
-  description: Lint Markdown files using rumdl.
-  entry: rumdl check
+  name: rumdl
+  description: Lint and auto-fix Markdown files. Exits 1 if unfixable violations remain.
+  entry: rumdl check --fix
   language: python
   types: [markdown]
   require_serial: true
 
 - id: rumdl-fmt
-  name: rumdl format
-  description: Format Markdown files and fail if unfixable violations remain.
-  entry: rumdl check --fix
+  name: rumdl fmt
+  description: Format Markdown files in place. Always exits 0; relies on pre-commit file-change detection.
+  entry: rumdl fmt
   language: python
   types: [markdown]
   require_serial: true

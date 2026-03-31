@@ -11,13 +11,13 @@ repos:
   - repo: https://github.com/rvben/rumdl-pre-commit
     rev: v0.1.63
     hooks:
-      - id: rumdl      # Lint only (fails on issues)
-      - id: rumdl-fmt  # Auto-format and fail if issues remain
+      - id: rumdl      # Lint + auto-fix, fails if unfixable issues remain
+      - id: rumdl-fmt  # Pure format, always exits 0
 ```
 
 Two hooks are available:
-- **`rumdl`** — Lints files and fails if any issues are found
-- **`rumdl-fmt`** — Auto-formats files and fails if unfixable violations remain (recommended for CI)
+- **`rumdl`** — Lints and auto-fixes files. Exits 1 if unfixable violations remain. Use this for full coverage.
+- **`rumdl-fmt`** — Formats files in place and always exits 0. Relies on pre-commit's file-change detection. Use alongside `rumdl` for the ruff-style split.
 
 ## Installation
 
