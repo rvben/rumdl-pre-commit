@@ -9,7 +9,7 @@ To use rumdl with pre-commit, add the following to your `.pre-commit-config.yaml
 ```yaml
 repos:
   - repo: https://github.com/rvben/rumdl-pre-commit
-    rev: v0.2.14
+    rev: v0.2.15
     hooks:
       - id: rumdl      # Lint only; add args [--fix] to auto-fix
       - id: rumdl-fmt  # Pure format, always exits 0
