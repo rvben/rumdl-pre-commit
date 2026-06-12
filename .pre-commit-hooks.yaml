@@ -1,7 +1,7 @@
 - id: rumdl
   name: rumdl
-  description: Lint and auto-fix Markdown files. Exits 1 if unfixable violations remain.
-  entry: rumdl check --fix
+  description: Lint Markdown files. Exits 1 if violations are found. Add args [--fix] to auto-fix in place.
+  entry: rumdl check
   language: python
   types: [markdown]
   require_serial: true
