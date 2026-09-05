@@ -16,15 +16,20 @@ repos:
 ```
 
 Two hooks are available:
+
 - **`rumdl`** - Lints files and exits 1 if violations are found. Non-destructive by default; add `args: [--fix]` to auto-fix in place (the same opt-in model as ruff's linter hook).
 - **`rumdl-fmt`** - Formats files in place and always exits 0. Relies on pre-commit's file-change detection. Use alongside `rumdl` for the ruff-style split.
 
-To auto-fix violations in place, opt in with `args`:
+### Passing options
+
+The `rumdl` hook runs `rumdl check` and `rumdl-fmt` runs `rumdl fmt`; pass any flag of that command through `args`. For example, to auto-fix in place and skip the configured [code-block tools](https://rumdl.dev/code-block-tools/):
 
 ```yaml
       - id: rumdl
-        args: [--fix]
+        args: [--fix, --no-code-block-tools]
 ```
+
+See the [pre-commit page in the rumdl docs](https://rumdl.dev/usage/pre-commit/) for more examples, including the code-block tool modes.
 
 ## Installation
 
@@ -32,4 +37,4 @@ When you run `pre-commit install` or `pre-commit run`, pre-commit will automatic
 
 ## License
 
-MIT (see [LICENSE](LICENSE)) 
+MIT (see [LICENSE](LICENSE))
