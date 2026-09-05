@@ -1,4 +1,4 @@
-- id: rumdl
+- id: rumdl-check
   name: rumdl check
   description: Lint Markdown files. Exits 1 if violations are found. Add args [--fix] to auto-fix in place.
   entry: rumdl check
@@ -10,6 +10,16 @@
   name: rumdl fmt
   description: Format Markdown files in place. Always exits 0; relies on pre-commit file-change detection.
   entry: rumdl fmt
+  language: python
+  types: [markdown]
+  require_serial: true
+
+# Legacy alias for rumdl-check. Kept indefinitely: the id is a public contract
+# and removing it breaks every config pinned to it at the next autoupdate.
+- id: rumdl
+  name: rumdl check
+  description: Lint Markdown files. Legacy alias for rumdl-check.
+  entry: rumdl check
   language: python
   types: [markdown]
   require_serial: true
